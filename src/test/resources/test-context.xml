@@ -10,6 +10,9 @@
           http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
+    <!--
+      Assuming a lot here :)
+    -->
     <mongo:mongo host="localhost" port="27017" />
     <mongo:db-factory dbname="springmongo" />
 
