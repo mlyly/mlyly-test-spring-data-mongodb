@@ -1,7 +1,5 @@
 package fi.zcode.springmongo.model;
 
-import org.springframework.core.style.ToStringCreator;
-
 /**
  *
  * @author mlyly
