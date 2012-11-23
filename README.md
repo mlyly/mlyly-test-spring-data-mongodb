@@ -2,16 +2,18 @@
 
 1. Get MongoDB and run it
 
+```
 	mkdir data
 	mongod --dbpath=data
+```
 
 2. build & test (see TestApp.java)
-
+```
 	mvn clean install
-
+```
 
 You should see something like this:
-
+```
 15:21:30,981 INFO  [main] [AppTest] testApp)()...
 15:21:30,982 INFO  [main] [AppTest]   mongoTemplate: org.springframework.data.mongodb.core.MongoTemplate@7e7f8062
 15:21:30,982 INFO  [main] [AppTest] save...
@@ -31,3 +33,4 @@ You should see something like this:
 15:21:32,281 INFO  [main] [AppTest]   found number of users where age <= 2: 28
 15:21:32,281 INFO  [main] [AppTest]   user: User[username=1353676892006, password=***, age=2, fn=Elvis, ln=Mozart]
 15:21:32,281 INFO  [main] [AppTest]   user: User[username=1353676892006, password=***, age=2, fn=Elvis, ln=Joplin]
+```
