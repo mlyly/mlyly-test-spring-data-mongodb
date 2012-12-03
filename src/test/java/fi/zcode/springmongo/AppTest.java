@@ -13,6 +13,8 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -175,6 +177,29 @@ public class AppTest {
             LOG.info("  user: {}", u);
         }
 
+
+        LOG.info("Paged lite finder...");
+
+        Page<User> page = userRepository.findByAgeLTLight(2, new PageRequest(0, 10));
+        LOG.info("  page.number = {}", page.getNumber());
+        LOG.info("  page.numberOfElements = {}", page.getNumberOfElements());
+        LOG.info("  page.size = {}", page.getSize());
+        LOG.info("  page.totalElements = {}", page.getTotalElements());
+        LOG.info("  page.totalPages = {}", page.getTotalPages());
+
+        // Check size
+        assertEquals(page.getTotalElements(), listUser.size());
+
+        // Check "lightness"
+        for (User u : page.getContent()) {
+            LOG.info("  Lite user: {}", u);
+            assertNull(u.getFirstname());
+        }
+
+        LOG.info("Test paging...");
+        page = userRepository.findAll(new PageRequest(0, 10));
+        assertEquals(page.getContent().size(), 10);
+
         LOG.info("List groups...");
         for (Group group : groupRepository.findAll()) {
             LOG.info("GROUP: {}", group.getName());
@@ -182,6 +207,7 @@ public class AppTest {
                 LOG.info("  USER: {}", u);
             }
         }
+
 
         LOG.info("Delete all generated users...");
         mongoTemplate.remove(new Query(Criteria.where("username").is(toBeDeletedUsername)), User.class);
