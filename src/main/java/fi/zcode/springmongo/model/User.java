@@ -1,10 +1,21 @@
 package fi.zcode.springmongo.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 /**
  *
  * @author mlyly
  */
+@Document(collection="xusers")
 public class User {
+
+    @Id
+    private String id = UUID.randomUUID().toString();
 
     private String username;
     private String password;
@@ -12,9 +23,12 @@ public class User {
     private String firstname;
     private String lastname;
 
+    // @DBRef
+    // private Collection<Group> groups = new ArrayList<Group>();
+
     @Override
     public String toString() {
-        return "User[username=" + username + ", password=***, age=" + age + ", fn=" + firstname + ", ln=" + lastname + "]";
+        return "User[username=" + username + ", password=***, age=" + age + ", fn=" + firstname + ", ln=" + lastname + ", id=" + id + "]";
     }
 
     public User() {
@@ -27,6 +41,25 @@ public class User {
         this.lastname = "NA";
         this.firstname = "NA";
     }
+
+//    public void addGroup(Group g) {
+//        if (g != null) {
+//            getGroups().add(g);
+//        }
+//    }
+//
+
+    public String getId() {
+        return id;
+    }
+
+//    public Collection<Group> getGroups() {
+//        return groups;
+//    }
+//
+//    public void setGroups(Collection<Group> groups) {
+//        this.groups = groups;
+//    }
 
     public int getAge() {
         return age;

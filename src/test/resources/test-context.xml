@@ -21,4 +21,6 @@
         <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
     </bean>
 
+    <mongo:repositories base-package="fi.zcode.springmongo.repository" />
+
 </beans>
