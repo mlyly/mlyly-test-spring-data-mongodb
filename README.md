@@ -1,36 +1,32 @@
 # Spring data and Mongodb testing
 
-1. Get MongoDB and run it
+1. Build and test (AppTest.java)
 
-```
-	mkdir data
-	mongod --dbpath=data
-```
+Using flapdoodle to bootstartp embedded Mongodb.
 
-2. build & test (see TestApp.java)
-```
 	mvn clean install
-```
 
 You should see something like this:
-```
-15:21:30,981 INFO  [main] [AppTest] testApp)()...
-15:21:30,982 INFO  [main] [AppTest]   mongoTemplate: org.springframework.data.mongodb.core.MongoTemplate@7e7f8062
-15:21:30,982 INFO  [main] [AppTest] save...
-15:21:31,022 INFO  [main] [AppTest] find...
-15:21:31,996 INFO  [main] [AppTest]   found: User[username=theusername, password=***, age=42, fn=NA, ln=NA]
-15:21:31,996 INFO  [main] [AppTest] update...
-15:21:31,999 INFO  [main] [AppTest] find...
-15:21:32,001 INFO  [main] [AppTest]   found: User[username=theusername, password=***, age=42, fn=NA, ln=NA]
-15:21:32,001 INFO  [main] [AppTest] findAll...
-15:21:32,004 INFO  [main] [AppTest] findAll... number of users: 1
-15:21:32,004 INFO  [main] [AppTest]   user: User[username=theusername, password=***, age=42, fn=NA, ln=NA]
-15:21:32,004 INFO  [main] [AppTest] delete...
-15:21:32,005 INFO  [main] [AppTest] findAll...
-15:21:32,006 INFO  [main] [AppTest] findAll... number of users: 0
-15:21:32,006 INFO  [main] [AppTest] Create 1000 users...
-15:21:32,273 INFO  [main] [AppTest] Find all age <= 2...
-15:21:32,281 INFO  [main] [AppTest]   found number of users where age <= 2: 28
-15:21:32,281 INFO  [main] [AppTest]   user: User[username=1353676892006, password=***, age=2, fn=Elvis, ln=Mozart]
-15:21:32,281 INFO  [main] [AppTest]   user: User[username=1353676892006, password=***, age=2, fn=Elvis, ln=Joplin]
-```
+
+	Running fi.zcode.springmongo.AppTest
+	14:08:30,136 INFO  [main] [TestContextManager] @TestExecutionListeners is not present for class [class fi.zcode.springmongo.AppTest]: using defaults.
+	14:08:30,158 INFO  [main] [AppTest] setUp()...
+	Jun 17, 2013 2:08:30 PM de.flapdoodle.embed.process.store.ArtifactStoreBuilder build
+	SEVERE: Build ArtifactStore(useCache:true)
+	Extract /Users/mlyly/.embedmongo/osx/mongodb-osx-x86_64-2.4.3.tgz START
+	...
+	14:08:33,949 INFO  [main] [AppTest] testApp)()...
+	14:08:33,949 INFO  [main] [AppTest] save...
+	Mon Jun 17 14:08:33.979 [initandlisten] connection accepted from 127.0.0.1:58812 #1 (1 connection now open)
+	[mongod output] Mon Jun 17 14:08:33.981 [conn1] run command admin.$cmd { isMaster: 1 }
+	[mongod output] Mon Jun 17 14:08:33.981 [conn1] command admin.$cmd command: { isMaster: 1 } ntoreturn:1 keyUpdates:0  reslen:115 0ms
+	[mongod output] Mon Jun 17 14:08:33.988 [conn1] opening db:  springmongo
+	[mongod output] 14:08:33,988 INFO  [main] [AppTest] find...
+	...
+	[INFO] ------------------------------------------------------------------------
+	[INFO] BUILD SUCCESS
+	[INFO] ------------------------------------------------------------------------
+	[INFO] Total time: 9.212s
+	[INFO] Finished at: Mon Jun 17 14:08:37 EEST 2013
+	[INFO] Final Memory: 11M/554M
+	[INFO] ------------------------------------------------------------------------

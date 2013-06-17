@@ -11,16 +11,15 @@
           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <!--
-      Assuming a lot here :)
+      Setting UP the mongo - see "AppTest.java" of how this is actually bootstapped, ... flapdoodle FTW!
     -->
-    <mongo:mongo host="localhost" port="27017" />
-    <mongo:db-factory dbname="springmongo" />
+    <mongo:mongo id="mongoDb" host="localhost" port="12345" />
 
-    <bean id="mongoTemplate"
-          class="org.springframework.data.mongodb.core.MongoTemplate">
+    <mongo:db-factory id="mongoDbFactory" dbname="springmongo" mongo-ref="mongoDb"/>
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
     </bean>
 
-    <mongo:repositories base-package="fi.zcode.springmongo.repository" />
+    <mongo:repositories base-package="fi.zcode.springmongo.repository" mongo-template-ref="mongoTemplate" />
 
 </beans>

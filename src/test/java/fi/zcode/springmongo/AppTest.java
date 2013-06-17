@@ -1,13 +1,25 @@
 package fi.zcode.springmongo;
 
+import com.mongodb.Mongo;
+import de.flapdoodle.embed.mongo.MongodExecutable;
+import de.flapdoodle.embed.mongo.MongodProcess;
+import de.flapdoodle.embed.mongo.MongodStarter;
+import de.flapdoodle.embed.mongo.config.MongodConfig;
+import de.flapdoodle.embed.mongo.distribution.Version;
+import de.flapdoodle.embed.process.runtime.Network;
 import fi.zcode.springmongo.model.Group;
 import fi.zcode.springmongo.model.User;
 import fi.zcode.springmongo.repository.GroupRepository;
 import fi.zcode.springmongo.repository.UserRepository;
+import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import org.junit.After;
+import org.junit.AfterClass;
 import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -51,6 +63,48 @@ public class AppTest {
     private MongoOperations mongoTemplate;
 
 
+    //
+    // https://github.com/flapdoodle-oss/embedmongo.flapdoodle.de -- it seems that start&stop in @Before/@After causes half of tests to fail... weird.
+    //
+
+    // Start stop mongo
+    private static MongodExecutable _mongodExe;
+    private static MongodProcess _mongod;
+    private Mongo _mongo;
+
+    @BeforeClass
+    public static void setUp() throws Exception {
+        LOG.info("setUp()...");
+        MongodStarter runtime = MongodStarter.getDefaultInstance();
+        _mongodExe = runtime.prepare(new MongodConfig(Version.Main.PRODUCTION, 12345, Network.localhostIsIPv6()));
+        _mongod = _mongodExe.start();
+
+//        mongoTemplate = new MongoTemplate(mongoDbFactory);
+
+        LOG.info("setUp()... done.");
+    }
+
+    @AfterClass
+    public static void tearDown() throws Exception {
+        LOG.info("tearDown()...");
+        _mongod.stop();
+        _mongod.waitFor();
+        _mongodExe.stop();
+
+        LOG.info("tearDown()... done.");
+    }
+
+    @Before
+    public void doBefore() throws UnknownHostException {
+        _mongo = new Mongo("localhost", 12345);
+    }
+
+    @After
+    public void doAfter() {
+        _mongo.dropDatabase("springmongo");
+    }
+
+
     @Test
     public void testWithMongoTemplate() {
         assertNotNull(mongoTemplate);
@@ -83,10 +137,8 @@ public class AppTest {
         assertEquals(0, mongoTemplate.count(new Query(Criteria.where("lastname").is("TOBEDELETED")), User.class));
     }
 
-
-
     @Test
-    public void testApp() {
+    public void testApp() throws InterruptedException {
         // assertTrue( true );
         LOG.info("testApp)()...");
 
@@ -94,7 +146,6 @@ public class AppTest {
 
         LOG.info("save...");
         userRepository.save(user);
-        // mongoTemplate.save(user, DB_USERS);
 
         LOG.info("find...");
         User savedUser = userRepository.findOne(user.getId());
@@ -123,9 +174,12 @@ public class AppTest {
             LOG.info("  user: {}", u);
         }
 
+        assertTrue("There should be only ONE user", userRepository.count() == 1);
+
         LOG.info("deleteAll... (count={})", userRepository.count());
         userRepository.deleteAll();
 
+        assertTrue("There should be NO users", userRepository.count() == 0);
 
         LOG.info("Create 2 groups AND 1000 users...");
 
@@ -169,9 +223,11 @@ public class AppTest {
         groupRepository.save(groupEven);
         groupRepository.save(groupOdd);
 
+        Thread.sleep(2000);
+
         LOG.info("Find all age <= 2...");
         List<User> listUser = mongoTemplate.find(new Query(Criteria.where("age").lte(2)), User.class);
-        LOG.info("  found number of users where age <= 2: {}", listUser.size());
+        LOG.info("  *** found number of users where age <= 2: {}", listUser.size());
 
         for (User u : listUser) {
             LOG.info("  user: {}", u);
@@ -187,14 +243,15 @@ public class AppTest {
         LOG.info("  page.totalElements = {}", page.getTotalElements());
         LOG.info("  page.totalPages = {}", page.getTotalPages());
 
-        // Check size
-        assertEquals(page.getTotalElements(), listUser.size());
-
         // Check "lightness"
         for (User u : page.getContent()) {
             LOG.info("  Lite user: {}", u);
-            assertNull(u.getFirstname());
+            assertNull("Users first name is not fetched, should be null!", u.getFirstname());
         }
+
+        // Check size
+        assertEquals(page.getTotalElements(), listUser.size());
+
 
         LOG.info("Test paging...");
         page = userRepository.findAll(new PageRequest(0, 10));
@@ -226,10 +283,6 @@ public class AppTest {
         LOG.info("testApp)()... done.");
     }
 
-
-
-
-
     private String createRandom(String prefix) {
         return createRandom(prefix, null);
     }
@@ -248,9 +301,6 @@ public class AppTest {
 
         return sb.toString();
     }
-
-
-
 
     private User createDummyUser() {
         Random r = new Random();

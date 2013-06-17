@@ -7,7 +7,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>springmongo</name>
+    <name>mlyly-test-spring-data-mongodb</name>
     <url>http://maven.apache.org</url>
 
     <build>
@@ -22,25 +22,25 @@
                 </configuration>
             </plugin>
 
-<!--
-            <plugin>
-                <groupId>com.mysema.maven</groupId>
-                <artifactId>apt-maven-plugin</artifactId>
-                <version>1.0.7</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>process</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>target/generated-sources/java</outputDirectory>
-                            <processor>org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor</processor>
-                            <!- -  <processor>com.mysema.query.mongodb.morphia.MorphiaAnnotationProcessor</processor> - ->
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
--->
+            <!--
+                        <plugin>
+                            <groupId>com.mysema.maven</groupId>
+                            <artifactId>apt-maven-plugin</artifactId>
+                            <version>1.0.7</version>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>process</goal>
+                                    </goals>
+                                    <configuration>
+                                        <outputDirectory>target/generated-sources/java</outputDirectory>
+                                        <processor>org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor</processor>
+                                        <!- -  <processor>com.mysema.query.mongodb.morphia.MorphiaAnnotationProcessor</processor> - ->
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+            -->
 
         </plugins>
     </build>
@@ -98,5 +98,13 @@
             <scope>test</scope>
             <type>jar</type>
         </dependency>
+
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <version>1.33</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 </project>
